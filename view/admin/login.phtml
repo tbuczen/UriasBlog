@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title><?=$title;?></title>
+        <link rel="stylesheet" href="/view/css/normalize.css"/>
+        <link rel="stylesheet" href="/view/css/all.css"/>
+        <link rel="stylesheet" href="/view/css/phones.css"/>
+        <link rel="stylesheet" href="/view/css/tablets.css"/>
+        <link rel="stylesheet" href="/view/css/normal.css"/>
+        <style>
+            html,body {
+                height:100%;
+                width:100%;
+                margin:0;
+            }
+            body {
+                display:flex;
+            }
+            #login-wrapper {
+                margin:auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="login-wrapper">
+            <form method="post" action="/login"> <?php //Find something so we can better refer to our action ?>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" />
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" />
+                <input type="submit" name="login" value="LogIn" />
+
+            </form>
+            <?php
+                if(isset($error)){
+                    echo "<div>$error</div>";
+                }
+            ?>
+        </div>
+    </body>
+</html>

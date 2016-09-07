@@ -1,0 +1,56 @@
+<?php
+//post (title,date,description,img_main,img_gallery)
+    if(isset($posts) && isset($layout)):
+    $counter = 1;
+    foreach ($posts as $key => $post) {
+        $shareUrl = 'http://'.$_SERVER['HTTP_HOST'].DS."post".DS.$post["date"] .DS. $post["title"];
+        if ($layout == "list"): //LAYOUT LIST?>
+        <article class="list-item">
+            <!--    Image and text-->
+            <div class="l-preview-wrapper" >
+                <a class="hidden-url" href="<?=$shareUrl?>">
+                    <!-- description-->
+                    <aside class="l-post-description"><?=$post["description"]?></aside>
+                    <!-- main image-->
+                    <img class="l-post-preview" src="uploads/<?=$post["date"] .DS. $post["title"] .DS. $post["img_main"]?>">
+                </a>
+            </div>
+
+            <!--    share button -->
+            <div class="l-footer">
+                <div class="l-share">
+                    <a class="share-twitter icon" href="#" data-href='http://twitter.com/intent/tweet?status=<?=$post["title"]?>+<?=$shareUrl?>' ></a>
+                    <a class="share-facebook icon" href="#" data-href='http://www.facebook.com/sharer/sharer.php?u=<?=$shareUrl?>&title=<?=$post["title"]?>' ></a>
+                    <a class="share-googleplus icon" href="#" data-href='https://plus.google.com/share?url=<?=$shareUrl?>'></a>
+                </div>
+                <div class="l-tags"><?=$post["tags"]?></div>
+                <div class="l-date">Date: <?=$post["date"]?></div>
+            </div>
+        </article>
+
+        <?php elseif ($layout == "grid"): //LAYOUT GRID?>
+            <?php if($counter%2 != 0): ?><div class="grid-row"><?php endif;?>
+
+            <article class="grid-item" onclick="window.location.href='<?=$shareUrl?>//'; return false;">
+                    <img class="g-preview" src="uploads/<?=$post["date"] .DS. $post["title"] .DS. $post["img_main"]?>"/>
+
+                    <div class="g-date"><?=$post["date"]?></div>
+
+                    <div class="g-share">
+                        <a class="share-twitter icon" href="#" data-href='http://twitter.com/intent/tweet?status=<?=$post["title"]?>+<?=$shareUrl?>' ></a>
+                        <a class="share-facebook icon" href="#" data-href='http://www.facebook.com/sharer/sharer.php?u=<?=$shareUrl?>&title=<?=$post["title"]?>' ></a>
+                        <a class="share-googleplus icon" href="" data-href='https://plus.google.com/share?url=<?=$shareUrl?>'></a>
+                    </div>
+
+                    <div class="g-description">
+                        <?=$post["description"]?>
+                    </div>
+            </article>
+
+            <?php if($counter%2 == 0 || ($key+1) == count($posts)): ?></div><?php endif;?>
+        <?php $counter++; ?>
+<?php endif; }
+    endif;
+?>
+
+

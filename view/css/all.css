@@ -1,0 +1,111 @@
+body{
+    background-color: #fff;
+    font-size: 12pt;
+    font-family: "Tahoma", sans-serif;
+}
+.hidden-url{
+    text-decoration: none;
+}
+
+.nohover:hover{
+    opacity: 1 !important;
+    background-color: inherit !important;
+}
+
+.changeView .grid{
+    background-image: url("/view/gfx/list.png");
+}
+
+.changeView .list{
+    background-image: url("/view/gfx/grid.png");
+}
+
+.l-preview-wrapper{
+    cursor: pointer;
+}
+
+.l-footer{
+    width: 100%;
+    height: 50px;
+    background-color: #666;
+}
+
+.l-tags{
+    font-size: 18px;
+    font-weight: bold;
+    float: left;
+    width: calc(100% - 170px - 180px - 10px);
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.l-date{
+    float: right;
+    width: 180px;
+    text-align: center;
+    line-height: 50px;
+    height: 50px;
+    background-color: #777;
+}
+
+/*NAV BUTTONS*/
+nav {
+    margin-top: 10px !important;
+}
+
+.nav-links > a{
+    background-color: #777;
+    padding: 12px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+}
+
+nav a:hover{
+    background-color: #666;
+}
+
+/*SHARE BUTTONS*/
+.l-share{
+    width:170px;
+    float: left;
+    height: 50px;
+}
+
+.icon{
+    cursor: pointer;
+    display: inline-block;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    background-size: 50px;
+}
+.icon:hover{
+    opacity: 0.7;
+    filter: alpha(opacity=70); /* For IE8 and earlier */
+}
+
+.share-facebook{
+    background-image: url("/view/gfx/icons/facebook.png");
+}
+
+.share-googleplus{
+    background-image: url("/view/gfx/icons/googleplus.png");
+}
+
+.share-twitter{
+    background-image: url("/view/gfx/icons/twitter.png");
+}
+
+
+/*ADMIN*/
+#login-wrapper{
+    display: flex;
+    width: 260px;
+    padding: 20px;
+    background-color: #777;
+    margin: 0 auto;
+}

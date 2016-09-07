@@ -1,0 +1,18 @@
+<table>
+    <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Title</th>
+        <th></th>
+        <th></th>
+    </tr>
+    <?php foreach ($posts as $key => $post) : ?>
+    <tr>
+        <td><?=$key?></td>
+        <td><?=$post["date"];?></td>
+        <td><?=$post["title"];?></td>
+        <td>EDIT <?=$post["id"];?></td>
+        <td>DEL<?=$post["id"];?></td>
+    </tr>
+    <?php endforeach; ?>
+</table>
