@@ -14,17 +14,65 @@ class Db
         $this->PDO = new PDO(DB_DSN, DB_USER, DB_PASS, $driver_options);
     }
 
-    public function insert($data,$table){
-
-
-        $stmt = $this->PDO->prepare("INSERT INTO `$table` (`username`, `password`,`nickname`, `email`) 
-        VALUES (:username, :password, :nickname, :email)");
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
-        $stmt->bindParam(':nickname', $nickname);
-        $stmt->bindParam(':email', $email);
+    public function execute($query){
+        $stmt = $this->PDO->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @param $table string - Table name
+     * @param $data - array - Search array
+     * @param null $limit
+     * @param null $columns
+     * @return array
+     */
+    public function fetch($table,$data,$limit = null, $columns = "*")
+    {
+        $conditions = array();
+        foreach ($data as $column => $value){
+            if(is_string($value)){
+                $conditions[] = "$column LIKE '$value'";
+            }else if(is_float($value) || is_int($value)){
+                $conditions[] = "$column = $value";
+            }else if(is_array($value)){
+                $conditions[] = "$column IN ( " . implode(",",$value) . " )";
+            }
+        }
+        $conditions = implode(" AND ",$conditions);
+
+        $query =" SELECT $columns FROM `$table` WHERE $conditions";
+        if($limit !== null){
+            $query .= " LIMIT $limit";
+        }
+        $stmt = $this->PDO->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param $table string - Table Name
+     * @param $data array - e.g. ('columnName1' => value1, 'columnName2' => value2)
+     * @return int last inserted id
+     */
+    public function insert($table,$data){
+        $columns = "`" . implode("`,`", array_keys($data)) . "`";
+        $valueNames = " :" . implode(", :", array_keys($data));
+
+        $stmt = $this->PDO->prepare("INSERT INTO `$table`  ($columns) VALUES ($valueNames)");
+        foreach ($data as $column => $value){
+            $stmt->bindParam(':'.$column, $value);
+        }
+        $stmt->execute();
+
+        return $this->PDO->lastInsertId();
+    }
+
+    public function findUser($loginData)
+    {
+        $sql = "";
+        $this->execute("user",$loginData);
+    }
 
 
 

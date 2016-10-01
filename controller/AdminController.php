@@ -10,8 +10,8 @@ class AdminController extends BaseController
      * @return bool
      */
     private function isLoggedIn(){
-//        if (isset($_SESSION[""])){
-//        }
+        if (isset($_SESSION["user"])){
+        }
         return false;
     }
 
@@ -20,7 +20,7 @@ class AdminController extends BaseController
         $options = ['cost' => 10,'salt' => $salt];
         $passwordHashed = password_hash("$password", PASSWORD_BCRYPT, $options);
         $data = array("username" => $user, "password" => $passwordHashed, "nickname" => $nickname, "pep" => $salt, "email" => $email);
-        $this->db->insert($data,"user");
+        $this->db->insert("user",$data);
     }
 
     /**
@@ -31,7 +31,7 @@ class AdminController extends BaseController
         $error = null;
         $success = false;
         if(isset($_POST["username"]) && isset($_POST["password"])){
-            echo "check data base";
+            $this->db->findUser(array("username" => $_POST["username"], "password" => $_POST["password"] ));
         }else{
             $error = "Both fields required.";
         }
