@@ -12,10 +12,9 @@ USE `urias-blog` ;
 -- Table `urias-blog`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urias-blog`.`user` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NULL,
   `password` VARCHAR(255) NULL,
-  `pep` VARCHAR(255) NULL,
   `nickname` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
@@ -25,7 +24,7 @@ ENGINE = InnoDB;
 -- Table `urias-blog`.`media`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urias-blog`.`media` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `filename` VARCHAR(45) NULL,
   `extension` VARCHAR(45) NULL,
   `post_id` INT NOT NULL,
@@ -44,7 +43,7 @@ ENGINE = InnoDB;
 -- Table `urias-blog`.`post`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `urias-blog`.`post` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `date` DATETIME NULL,
   `tags` TEXT NULL,
   `description` TEXT NULL,

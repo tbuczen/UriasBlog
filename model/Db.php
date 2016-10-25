@@ -64,9 +64,10 @@ class Db
         foreach ($data as $column => $value){
             $stmt->bindValue(':'.$column, $value);
         }
-        var_dump($stmt->queryString);
-        $stmt->execute();
 
+        $a = $stmt->execute();
+        var_dump($stmt->queryString);
+        var_dump($a);
         return $this->PDO->lastInsertId();
     }
 

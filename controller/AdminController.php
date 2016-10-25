@@ -16,11 +16,13 @@ class AdminController extends BaseController
     }
 
     public function createUser($user,$password,$nickname,$email=""){
-        $salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
-        $options = ['cost' => 10,'salt' => $salt];
+//        $salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+        $options = ['cost' => 12];
         $passwordHashed = password_hash("$password", PASSWORD_BCRYPT, $options);
         $data = array("username" => $user, "password" => $passwordHashed, "nickname" => $nickname, "pep" => $salt, "email" => $email);
         $this->db->insert("user",$data);
+
+        //passwordIsCorrect = password_verify(‘plaintext-password’, $hashedPassword);
     }
 
     /**

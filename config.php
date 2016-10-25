@@ -23,7 +23,7 @@ spl_autoload_register(function ($class_name) {
 });
 
 //DB
-$host = '127.0.0.1';
+$host = 'localhost';
 $db   = 'martikco';
 $charset = 'utf8';
 define("DB_DSN", "mysql:host=$host;dbname=$db;charset=$charset");
