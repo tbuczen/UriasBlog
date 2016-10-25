@@ -58,13 +58,19 @@ class Db
     public function insert($table,$data){
         $columns = "`" . implode("`,`", array_keys($data)) . "`";
         $valueNames = " :" . implode(", :", array_keys($data));
+        $query =  "INSERT INTO `$table` ($columns) VALUES ($valueNames)";
 
-        $stmt = $this->PDO->prepare("INSERT INTO `$table`  ($columns) VALUES ($valueNames)");
+        $stmt = $this->PDO->prepare($query);
         foreach ($data as $column => $value){
-            $stmt->bindParam(':'.$column, $value);
+            $stmt->bindValue(':'.$column, $value);
         }
+        var_dump($stmt->queryString);
         $stmt->execute();
 
+        return $this->PDO->lastInsertId();
+    }
+
+    public function getLastInsertId(){
         return $this->PDO->lastInsertId();
     }
 
