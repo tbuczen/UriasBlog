@@ -10,30 +10,32 @@ class AdminController extends BaseController
      * @return bool
      */
     private function isLoggedIn(){
-        if (isset($_SESSION["user"])){
-        }
-        return false;
+        return (isset($_SESSION["user"]))? true:false;
     }
 
     public function createUser($user,$password,$nickname,$email=""){
-//        $salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
         $options = ['cost' => 12];
         $passwordHashed = password_hash("$password", PASSWORD_BCRYPT, $options);
         $data = array("username" => $user, "password" => $passwordHashed, "nickname" => $nickname, "pep" => $salt, "email" => $email);
         $this->db->insert("user",$data);
 
-        //passwordIsCorrect = password_verify(‘plaintext-password’, $hashedPassword);
+
     }
 
     /**
      * @return array
      */
     private function login(){
-        var_dump($_POST);
         $error = null;
         $success = false;
         if(isset($_POST["username"]) && isset($_POST["password"])){
-            $this->db->findUser(array("username" => $_POST["username"], "password" => $_POST["password"] ));
+            $user = $this->db->findUser(array("username" => $_POST["username"], "password" => $_POST["password"] ));
+            if($user){
+                $_SESSION["user"] = array("username" => $user["username"], "nickname" => $user["nickname"], "email" => $user["email"]);
+                $success = true;
+            }else{
+                $error = "Given credentials are invalid";
+            }
         }else{
             $error = "Both fields required.";
         }
@@ -79,19 +81,21 @@ class AdminController extends BaseController
 
     public function loginAction(){
         if($this->isLoggedIn()){
-            $this->adminAction();
+
             return false;
         }
         if(isset($_POST["login"])){
             $loginData = $this->login();
             if($loginData["success"]){
-                //go to admin
-                $this->adminAction();
+                $this->redirect("admin");
             }else{
                 $this->vc->assign('error',$loginData["error"]);
+                $this->vc->renderOne("login","admin");
             }
+        }else{
+            $this->vc->renderOne("login","admin");
         }
-        $this->vc->renderOne("login","admin");
+
     }
 
 }

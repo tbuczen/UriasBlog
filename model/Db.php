@@ -24,7 +24,7 @@ class Db
      * @param $table string - Table name
      * @param $data - array - Search array
      * @param null $limit
-     * @param null $columns
+     * @param string $columns
      * @return array
      */
     public function fetch($table,$data,$limit = null, $columns = "*")
@@ -64,10 +64,7 @@ class Db
         foreach ($data as $column => $value){
             $stmt->bindValue(':'.$column, $value);
         }
-
-        $a = $stmt->execute();
-        var_dump($stmt->queryString);
-        var_dump($a);
+        $stmt->execute();
         return $this->PDO->lastInsertId();
     }
 
@@ -77,8 +74,13 @@ class Db
 
     public function findUser($loginData)
     {
-        $sql = "";
-        $this->execute("user",$loginData);
+        if( $user = $this->fetch("user",array("username" => $loginData["username"]))){
+            $passwordIsCorrect = password_verify($loginData["password"], $user["password"]);
+            if($passwordIsCorrect){
+                return $user;
+            }
+        }
+        return false;
     }
 
 

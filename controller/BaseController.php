@@ -69,4 +69,8 @@ class BaseController
         }
     }
 
+    public function redirect($path){
+        header('Location: /'.$path);
+    }
+
 }
