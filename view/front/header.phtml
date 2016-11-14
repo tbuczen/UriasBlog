@@ -5,11 +5,7 @@
         <meta name="keywords" content="Canada, photos, rocky mountains, USA, pictures, wildlife, blog">
         <meta name="author" content="">
         <title><?=$title;?></title>
-        <link rel="stylesheet" href="/view/css/normalize.css"/>
-        <link rel="stylesheet" href="/view/css/all.css"/>
-        <link rel="stylesheet" href="/view/css/phones.css"/>
-        <link rel="stylesheet" href="/view/css/tablets.css"/>
-        <link rel="stylesheet" href="/view/css/normal.css"/>
+        <style rel="stylesheet" media="all"><?= $this->minifyCss(); ?></style>
         <script src="/view/js/jquery-1.12.4.min.js"></script>
     </head>
     <body>

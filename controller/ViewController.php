@@ -9,6 +9,29 @@ class ViewController
         $this->htmlVars = new stdClass();
     }
 
+
+    public function minifyCss(){
+        $cssFolder = "view/css/";
+        $cssFiles = array_diff(scandir($cssFolder), array('..', '.'));
+        /**
+         * Ideally, you wouldn't need to change any code beyond this point.
+         */
+        $buffer = "";
+        foreach ($cssFiles as $cssFile) {
+            $buffer .= file_get_contents($cssFolder . $cssFile);
+        }
+        $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
+        $buffer = str_replace(': ', ':', $buffer);
+        $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer);
+//        ob_start("ob_gzhandler");
+// Enable caching
+//        header('Cache-Control: public');
+// Expire in one day
+//        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT');
+//        header("Content-type: text/css");
+        echo($buffer);
+    }
+
     /**
      * Assign variable to template
      * @param $var

@@ -28,6 +28,10 @@ class RoutingController extends BaseController
                 $controller = "admin";
                 $action = "login";
                 break;
+            case "logout" :
+                $controller = "admin";
+                $action = "logout";
+                break;
             case "tags" :
                 $action = "tags";
                 break;

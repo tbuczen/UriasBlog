@@ -1,6 +1,5 @@
 /*Pc > 1024*/
-@media screen
-and (min-device-width: 1024px)
+@media screen and (min-device-width: 1024px)
 and (max-device-width: 1920px) {
     #center,footer,header,nav{
         margin: auto;
@@ -169,4 +168,3 @@ and (max-device-width: 1920px) {
         font-size: 12px;
     }
 }
-

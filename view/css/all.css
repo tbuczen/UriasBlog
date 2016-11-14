@@ -1,3 +1,6 @@
+/*CUSTOM*/
+.left{float:left}
+.right{float:right}
 body{
     background-color: #fff;
     font-size: 12pt;
@@ -100,7 +103,6 @@ nav a:hover{
     background-image: url("/view/gfx/icons/twitter.png");
 }
 
-
 /*ADMIN*/
 #login-wrapper{
     display: flex;
@@ -108,4 +110,15 @@ nav a:hover{
     padding: 20px;
     background-color: #777;
     margin: 0 auto;
+}
+
+#admin-menu a{
+    font-size: 18px;
+}
+
+#admin-menu a:hover{
+    cursor: pointer;
+
+    text-decoration: underline;
+    background:none;
 }

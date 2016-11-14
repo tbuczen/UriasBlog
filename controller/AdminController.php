@@ -18,8 +18,6 @@ class AdminController extends BaseController
         $passwordHashed = password_hash("$password", PASSWORD_BCRYPT, $options);
         $data = array("username" => $user, "password" => $passwordHashed, "nickname" => $nickname, "pep" => $salt, "email" => $email);
         $this->db->insert("user",$data);
-
-
     }
 
     /**
@@ -40,6 +38,10 @@ class AdminController extends BaseController
             $error = "Both fields required.";
         }
         return array("success" => $success, "error" => $error );
+    }
+
+    private function logout(){
+        unset($_SESSION["user"]);
     }
 
     public function adminAction(){
@@ -81,8 +83,7 @@ class AdminController extends BaseController
 
     public function loginAction(){
         if($this->isLoggedIn()){
-
-            return false;
+            $this->redirect("admin");
         }
         if(isset($_POST["login"])){
             $loginData = $this->login();
@@ -95,7 +96,13 @@ class AdminController extends BaseController
         }else{
             $this->vc->renderOne("login","admin");
         }
+    }
 
+    public function logoutAction(){
+        if($this->isLoggedIn()){
+            $this->logout();
+            $this->redirect("login");
+        }
     }
 
 }
