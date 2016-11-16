@@ -3,15 +3,15 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema urias-blog
+-- Schema urias_blog
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `urias-blog` DEFAULT CHARACTER SET utf8 ;
-USE `urias-blog` ;
+CREATE SCHEMA IF NOT EXISTS `urias_blog` DEFAULT CHARACTER SET utf8 ;
+USE `urias_blog` ;
 
 -- -----------------------------------------------------
--- Table `urias-blog`.`user`
+-- Table `urias_blog`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `urias-blog`.`user` (
+CREATE TABLE IF NOT EXISTS `urias_blog`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NULL,
   `password` VARCHAR(255) NULL,
@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS `urias-blog`.`user` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `urias-blog`.`media`
+-- Table `urias_blog`.`media`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `urias-blog`.`media` (
+CREATE TABLE IF NOT EXISTS `urias_blog`.`media` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `filename` VARCHAR(45) NULL,
   `extension` VARCHAR(45) NULL,
@@ -33,16 +33,16 @@ CREATE TABLE IF NOT EXISTS `urias-blog`.`media` (
   INDEX `fk_media_post1_idx` (`post_id` ASC),
   CONSTRAINT `fk_media_post1`
     FOREIGN KEY (`post_id`)
-    REFERENCES `urias-blog`.`post` (`id`)
+    REFERENCES `urias_blog`.`post` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `urias-blog`.`post`
+-- Table `urias_blog`.`post`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `urias-blog`.`post` (
+CREATE TABLE IF NOT EXISTS `urias_blog`.`post` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `date` DATETIME NULL,
   `tags` TEXT NULL,
@@ -55,12 +55,12 @@ CREATE TABLE IF NOT EXISTS `urias-blog`.`post` (
   INDEX `fk_post_user1_idx` (`author_id` ASC),
   CONSTRAINT `fk_post_media`
     FOREIGN KEY (`main_img_id`)
-    REFERENCES `urias-blog`.`media` (`id`)
+    REFERENCES `urias_blog`.`media` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_post_user1`
     FOREIGN KEY (`author_id`)
-    REFERENCES `urias-blog`.`user` (`id`)
+    REFERENCES `urias_blog`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

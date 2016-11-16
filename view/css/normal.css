@@ -2,8 +2,8 @@
 @media screen and (min-device-width: 1024px)
 and (max-device-width: 1920px) {
     #center,footer,header,nav{
-        margin: auto;
-        width: 1000px;
+        margin: 0 auto;
+        padding: 0;
     }
     header{
         font-size: 35px;

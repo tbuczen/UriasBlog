@@ -10,7 +10,7 @@ class ViewController
     }
 
 
-    public function minifyCss(){
+    public function minifyCss($folder = null){
         $cssFolder = "view/css/";
         $cssFiles = array_diff(scandir($cssFolder), array('..', '.'));
         /**
@@ -23,12 +23,6 @@ class ViewController
         $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
         $buffer = str_replace(': ', ':', $buffer);
         $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer);
-//        ob_start("ob_gzhandler");
-// Enable caching
-//        header('Cache-Control: public');
-// Expire in one day
-//        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT');
-//        header("Content-type: text/css");
         echo($buffer);
     }
 

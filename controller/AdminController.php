@@ -16,7 +16,7 @@ class AdminController extends BaseController
     public function createUser($user,$password,$nickname,$email=""){
         $options = ['cost' => 12];
         $passwordHashed = password_hash("$password", PASSWORD_BCRYPT, $options);
-        $data = array("username" => $user, "password" => $passwordHashed, "nickname" => $nickname, "pep" => $salt, "email" => $email);
+        $data = array("username" => $user, "password" => $passwordHashed, "nickname" => $nickname, "email" => $email);
         $this->db->insert("user",$data);
     }
 
