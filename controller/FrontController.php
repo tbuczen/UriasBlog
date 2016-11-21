@@ -24,7 +24,7 @@ class FrontController extends BaseController
      */
     function handleRequest(){
         $route = ltrim($_SERVER["REQUEST_URI"],"/");
-        $normalizedRouteArray = explode("/",$this->normalizeRoute($route));
+        $normalizedRouteArray = $this->normalizeRoute($route);
         $data = $this->routing->routeToPage($normalizedRouteArray);
         $this->vc->assign("requestData",$data);
         $this->callActionOrRenderView($data);

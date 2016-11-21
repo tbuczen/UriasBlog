@@ -61,6 +61,7 @@ class ViewController
         if((@include_once "view/$viewDir/$viewName.phtml") === false)
         {
             //throw exception?
+            $error = "View : '" . "view/$viewDir/$viewName.phtml" . "' not found !";
             include_once "view/$viewDir/404.phtml";
         }
         include_once "view/$viewDir/footer.phtml";

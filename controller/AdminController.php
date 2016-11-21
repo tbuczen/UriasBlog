@@ -44,6 +44,10 @@ class AdminController extends BaseController
         unset($_SESSION["user"]);
     }
 
+    public function newPostAction(){
+        $this->vc->renderAll("newPost","admin");
+    }
+
     public function adminAction(){
         if(!$this->isLoggedIn()){
             $this->loginAction();

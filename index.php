@@ -1,6 +1,7 @@
 <?php
 //YAGNI, KISS, DRY principles
 require_once "config.php";
+require_once "routing.php";
 
 $fc = new FrontController();
 $fc->handleRequest();

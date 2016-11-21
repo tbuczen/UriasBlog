@@ -122,3 +122,15 @@ nav a:hover{
     text-decoration: underline;
     background:none;
 }
+
+/*Form*/
+.clear{
+    clear: both;
+    display: block;
+}
+
+.admin-input input,.admin-input textarea{
+    width: 200px;
+    max-width: 200px;
+    min-width: 200px;
+}

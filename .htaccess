@@ -2,7 +2,11 @@ DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    #if the requested file is not a font nor image,styleshet or js
+    RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|png|gif|woff|tff|woff2|css|js)$
+    #if the file with the specified name in the browser doesn't exist, or the directory in the browser doesn't exist then procede to the rewrite rule below
     RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
 

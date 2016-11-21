@@ -1,0 +1,45 @@
+<div id="center" class="col-1-1">
+    <form class="admin-input" type="POST" action="<?= $_SERVER["PHP_SELF"] ?>" enctype="multipart/form-data">
+        <input class="clear" type="text" placeholder="Title" name="title">
+        <textarea class="clear" name="description" placeholder="Post content..."></textarea>
+
+        <input type="file" name="images[]" id="images" multiple >
+<!--        <div class="uploading none">-->
+<!--            <label>Images</label>-->
+<!--            <img src="uploading.gif" alt="uploading......"/>-->
+<!--        </div>-->
+        <div id="images_preview"></div>
+
+        <input class="clear" type="submit" name="submit" value="Save">
+    </form>
+</div>
+
+<script type="application/javascript" async>
+    function checkMain(){
+        console.log(this);
+    }
+
+    function previewImages(){
+        $("#images_preview").html("");
+        var preview = document.querySelector('#images_preview');
+        if (this.files)
+            [].forEach.call(this.files, readAndPreview);
+
+        function readAndPreview(file) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function() {
+                var image = new Image();
+                image.height = 100;
+                image.className = "preview-thumbnail";
+                image.addEventListener("click",checkMain);
+                image.title  = file.name;
+                image.src    = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#images').addEventListener("change", previewImages, false);
+
+
+</script>

@@ -44,6 +44,7 @@ class BaseController
      * Check if we can call action specified in routing - if not - try to render view name based on action name
      * If it fails too - show 404
      * @param $data
+     * @throws Exception
      */
     public function callActionOrRenderView($data){
         //Get controller from data and create its instance
@@ -73,4 +74,15 @@ class BaseController
         header('Location: /'.$path);
     }
 
+    /**
+     * @param $data
+     */
+    public function dump($data){
+        if(!is_array($data)) $data = array($data);
+        echo "<pre>";
+        foreach ($data as $d ){
+            var_dump($d);
+        }
+        echo "</pre>";
+    }
 }
