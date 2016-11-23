@@ -1,22 +1,82 @@
 <div id="center" class="col-1-1">
     <form class="admin-input" type="POST" action="<?= $_SERVER["PHP_SELF"] ?>" enctype="multipart/form-data">
         <input class="clear" type="text" placeholder="Title" name="title">
-        <textarea class="clear" name="description" placeholder="Post content..."></textarea>
+        <textarea class="clear" name="description" id="description" placeholder="Post content..."></textarea>
 
-        <input type="file" name="images[]" id="images" multiple >
-<!--        <div class="uploading none">-->
-<!--            <label>Images</label>-->
-<!--            <img src="uploading.gif" alt="uploading......"/>-->
-<!--        </div>-->
+        <div class="upload">
+            <span>Drag'n Drop or Select Images</span>
+            <input type="file" name="images[]" id="images" multiple >
+        </div>
+
         <div id="images_preview"></div>
 
-        <input class="clear" type="submit" name="submit" value="Save">
+        <div>
+        <input class="clear btn-success" type="submit" name="submit" value="Save">
+        </div>
+
+        <input type="hidden" id="rotationInput" name="rotation">
+        <input type="hidden" id="thumbnailInput" name="thumbnail">
     </form>
 </div>
 
 <script type="application/javascript" async>
+    var rotation = [];
+    var thumbnail = "";
+
+    $('#description').trumbowyg({
+        btns: [
+            ['viewHTML'],
+            ['formatting'],
+            'btnGrp-semantic',
+            ['superscript', 'subscript'],
+            ['link'],
+            'btnGrp-justify',
+            'btnGrp-lists',
+            ['horizontalRule'],
+            ['removeformat']
+        ]
+    });
+
     function checkMain(){
-        console.log(this);
+        var parent = this.parentNode;
+        var children = parent.childNodes;
+
+        for (var i=0; i < children.length; i++) {
+            if (children[i].id == "img-checked") {
+                $("#img-checked").remove();
+                thumbnail = "";
+                return;
+            }
+        }
+        $("#img-checked").remove();
+        var check = document.createElement("i");
+        check.className = "fa fa-check-circle-o";
+        check.id = "img-checked";
+        parent.appendChild(check);
+        thumbnail = this.title;
+
+    }
+
+    function rotateImage(){
+        var parent = this.parentNode;
+        var children = parent.childNodes;
+        for (var i=0; i < children.length; i++) {
+            if (children[i].tagName == "IMG") {
+                img = children[i];
+                break;
+            }
+        }
+        number = img.className.replace(/[^0-9]/g, '');
+
+        var angle = parseInt(number);
+        angle = (angle+90)%360;
+        img.className = "preview-thumbnail rotate"+angle;
+
+        if(angle !=0 && angle != ""){
+            console.log(img.title);
+            //update rotation json
+        }
+
     }
 
     function previewImages(){
@@ -28,18 +88,26 @@
         function readAndPreview(file) {
             var reader = new FileReader();
             reader.addEventListener("load", function() {
+                var imgContainer = document.createElement("div");
+                imgContainer.className = "img-container";
+                imgContainer.height = 200;
+                var rotateButton = document.createElement("i");
+                rotateButton.className = "img-rotate fa fa-repeat";
+                rotateButton.addEventListener("click",rotateImage);
                 var image = new Image();
-                image.height = 100;
-                image.className = "preview-thumbnail";
+                image.height = 200;
+                image.className = "preview-thumbnail rotate0";
                 image.addEventListener("click",checkMain);
                 image.title  = file.name;
                 image.src    = this.result;
-                preview.appendChild(image);
+                imgContainer.appendChild(image);
+                imgContainer.appendChild(rotateButton);
+                preview.appendChild(imgContainer);
             }, false);
             reader.readAsDataURL(file);
         }
+
+        $("#images_preview").append("<div class='info'>Select one image by clicking on its thumbnail to set it as a post main preview image. In other case - first image will be used.</div>");
     }
     document.querySelector('#images').addEventListener("change", previewImages, false);
-
-
 </script>

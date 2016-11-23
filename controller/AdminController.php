@@ -45,6 +45,10 @@ class AdminController extends BaseController
     }
 
     public function newPostAction(){
+        if(isset($_POST["submit"])){
+            var_dump($_POST);
+        }
+
         $this->vc->renderAll("newPost","admin");
     }
 

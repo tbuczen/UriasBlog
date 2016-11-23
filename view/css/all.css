@@ -129,8 +129,117 @@ nav a:hover{
     display: block;
 }
 
-.admin-input input,.admin-input textarea{
-    width: 200px;
-    max-width: 200px;
-    min-width: 200px;
+.admin-input input,.admin-input textarea, .upload{
+    padding: 5px 0 5px 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    min-width: 280px;
+}
+.admin-input textarea {
+    min-height: 100px;
+}
+
+.upload{
+    height: 70px;
+    padding: 0;
+    overflow: hidden;
+    background-color: #1155cc;
+    position: relative;
+}
+
+input[type="file"], .upload span{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom:0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    left: 0;
+    line-height: 70px;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+}
+input[type="file"]{
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+[class*='btn-'] {
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-block;
+    padding: 6px 12px;
+    color: white;
+}
+
+[class*='btn-']:hover, .upload:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.btn-success{
+    background-color: #1b7943;
+    min-height: 70px;
+}
+.btn-info{
+    background-color: #1155cc;
+}
+.btn-error{
+    background-color: #e74c3c;
+}
+.btn-warning{
+    background-color: #ffc849;
+}
+
+/*Image manipulation*/
+.img-container{
+    display: inline-block;
+    position: relative;
+}
+.img-rotate{
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.preview-thumbnail {
+    margin-right: 20px;
+    margin-bottom: 10px;
+    transform-origin: top left; /* IE 10+, Firefox, etc. */
+    -webkit-transform-origin: top left; /* Chrome */
+    -ms-transform-origin: top left; /* IE 9 */
+}
+.preview-thumbnail.rotate90 {
+    transform: rotate(90deg) translateY(-100%);
+    -webkit-transform: rotate(90deg) translateY(-100%);
+    -ms-transform: rotate(90deg) translateY(-100%);
+}
+.preview-thumbnail.rotate180 {
+    transform: rotate(180deg) translate(-100%,-100%);
+    -webkit-transform: rotate(180deg) translate(-100%,-100%);
+    -ms-transform: rotate(180deg) translateX(-100%,-100%);
+}
+.preview-thumbnail.rotate270 {
+    transform: rotate(270deg) translateX(-100%);
+    -webkit-transform: rotate(270deg) translateX(-100%);
+    -ms-transform: rotate(270deg) translateX(-100%);
+}
+
+#img-checked{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #1b7943;
+}
+
+.info{
+    font-size: 17px;
+    margin-bottom: 10px;
 }
