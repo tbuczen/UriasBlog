@@ -18,8 +18,6 @@
 
         <div id="errors"></div>
 
-
-        <input type="hidden" id="rotationInput" name="rotation">
         <input type="hidden" id="thumbnailInput" name="thumbnail">
     </form>
 </div>
@@ -29,7 +27,6 @@
     var maxFileCount = <?= $maxCount ?>;
     var fileSize = 0;
     var fileCount = 0;
-    var thumbnail = "";
 
     $('#description').trumbowyg({
         btns: [
@@ -49,11 +46,12 @@
         var parent = this.parentNode;
         var children = parent.childNodes;
         var imgCheckedDiv = $("#img-checked");
+        var thumbnailInput = $("#thumbnailInput");
 
         for (var i=0; i < children.length; i++) {
             if (children[i].id == "img-checked") {
                 imgCheckedDiv.remove();
-                thumbnail = "";
+                thumbnailInput.val("");
                 return;
             }
         }
@@ -62,7 +60,7 @@
         check.className = "fa fa-check-circle-o";
         check.id = "img-checked";
         parent.appendChild(check);
-        thumbnail = this.title;
+        thumbnailInput.val(this.title);
 
     }
 
