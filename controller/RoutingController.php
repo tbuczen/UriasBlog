@@ -23,6 +23,8 @@ class RoutingController extends BaseController
         if(array_key_exists($route,$ROUTING))
             $path = $ROUTING[$route];
 
+        $route = strtok($route,'?');
+
         $matchScore = [];
         if(empty($path)) {
             //match route

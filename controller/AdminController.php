@@ -45,10 +45,24 @@ class AdminController extends BaseController
     }
 
     public function newPostAction(){
+        $size = ini_get('post_max_size');
+        $sizeBytes = $this->return_bytes($size);
         if(isset($_POST["submit"])){
             var_dump($_POST);
+            if(isset($_FILES["images"])) {
+                $sentSize = array_sum($_FILES["images"]["size"]);
+                if($sentSize <= $sizeBytes){
+                    var_dump($_FILES);
+                }else{
+                    //error - too big data
+                    $this->vc->assign('error',$size);
+                }
+            }
         }
 
+        $this->vc->assign('maxSize',$size);
+        $this->vc->assign('maxSizeBytes',$sizeBytes);
+        $this->vc->assign('maxCount',ini_get('max_file_uploads'));
         $this->vc->renderAll("newPost","admin");
     }
 
@@ -111,6 +125,21 @@ class AdminController extends BaseController
             $this->logout();
             $this->redirect("login");
         }
+    }
+
+    protected function return_bytes($val) {
+        $val = trim($val);
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+        return $val;
     }
 
 }

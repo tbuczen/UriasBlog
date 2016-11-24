@@ -243,3 +243,8 @@ input[type="file"]{
     font-size: 17px;
     margin-bottom: 10px;
 }
+
+.error{
+    color: #e74c3c;
+    font-weight: bold;
+}
