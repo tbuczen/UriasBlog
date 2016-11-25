@@ -36,6 +36,8 @@ class RoutingController extends BaseController
                         //if not a parameter and route length matches
                         if(!empty($possibleElem)) {
                             if ($possibleElem[0] !== "@" && $possibleElem == $routeElements[$key]) {
+                                if(!array_key_exists($possibleRoute,$matchScore))
+                                    $matchScore[$possibleRoute] = 0;
                                 $matchScore[$possibleRoute] += 1;
                             }else if($possibleElem[0] !== "@" && $possibleElem !== $routeElements[$key]){
                                 unset($matchScore[$possibleRoute]); //if route doesn match - break iterating over that path and its elements

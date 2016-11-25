@@ -1,22 +1,27 @@
 <div id="center" class="col-1-1">
-
-<table>
-    <tr>
-        <th>#</th>
-        <th>Date</th>
-        <th>Title</th>
-        <th></th>
-        <th></th>
-    </tr>
-    <?php foreach ($posts as $key => $post) : ?>
-    <tr>
-        <td><?=$key?></td>
-        <td><?=$post["date"];?></td>
-        <td><?=$post["title"];?></td>
-        <td>EDIT <?=$post["id"];?></td>
-        <td>DEL<?=$post["id"];?></td>
-    </tr>
-    <?php endforeach; ?>
-</table>
-
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Title</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <?php foreach ($posts as $key => $post) : ?>
+        <tr>
+            <td><?=$key?></td>
+            <td><?=$post["date"];?></td>
+            <td><?=$post["title"];?></td>
+            <td><a href="/admin/post/edit/<?=$post["id"];?>">Edit</a></td>
+            <td><a class="delete" href="/admin/post/delete/<?=$post["id"];?>">Delete</td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
 </div>
+<script type="application/javascript" async>
+    $(".delete").on("click",function(){
+        if (!confirm("Do you really want to delete ?")){
+            return false;
+        }
+    });
+</script>

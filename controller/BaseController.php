@@ -77,8 +77,7 @@ class BaseController
     /**
      * @param $data
      */
-    public function dump($data){
-        if(!is_array($data)) $data = array($data);
+    public function dump(...$data){
         echo "<pre>";
         foreach ($data as $d ){
             var_dump($d);

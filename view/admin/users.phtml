@@ -1,0 +1,29 @@
+<div id="center" class="col-1-1">
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Nickname</th>
+            <th>Email</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <?php foreach ($users as $key => $user) : ?>
+        <tr>
+            <td><?=$key?></td>
+            <td><?=$user["username"];?></td>
+            <td><?=$user["nickname"];?></td>
+            <td><?=$user["email"];?></td>
+            <td><a href="/admin/user/edit/<?=$post["id"];?>">Edit</a></td>
+            <td><a class="delete" href="/admin/user/delete/<?=$post["id"];?>">Delete</a></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
+<script type="application/javascript" async>
+    $(".delete").on("click",function(){
+        if (!confirm("Do you really want to delete ?")){
+            return false;
+        }
+    });
+</script>

@@ -1,0 +1,161 @@
+<div id="center" class="col-1-1">
+    <form id="postForm" class="admin-input" method="POST" action="/admin/post/update" enctype="multipart/form-data">
+        <?php var_dump($post); ?>
+        <?php var_dump($images); ?>
+
+        <input id="title" class="clear" type="text" placeholder="Title" name="title">
+        <textarea class="clear" name="description" id="description" placeholder="Post content..."></textarea>
+
+        <div>Maximum size for all images : <?= $maxSize ?>b</div>
+        <div>Maximum images per post : <?= $maxCount ?></div>
+        <div class="upload">
+            <span>Drag'n Drop or Select Images</span>
+            <input type="file" name="images[]" id="images" multiple >
+        </div>
+
+        <div id="images_preview"></div>
+
+        <div>
+            <input class="clear btn-success" type="submit" name="submit" value="Save">
+        </div>
+
+        <div id="errors"></div>
+
+        <input type="hidden" id="thumbnailInput" name="thumbnail">
+    </form>
+</div>
+
+<script type="application/javascript" async>
+    var maxFileSize = <?= $maxSizeBytes ?>;
+    var maxFileCount = <?= $maxCount ?>;
+    var fileSize = 0;
+    var fileCount = 0;
+
+    $('#description').trumbowyg({
+        btns: [
+            ['viewHTML'],
+            ['formatting'],
+            'btnGrp-semantic',
+            ['superscript', 'subscript'],
+            ['link'],
+            'btnGrp-justify',
+            'btnGrp-lists',
+            ['horizontalRule'],
+            ['removeformat']
+        ]
+    });
+
+    function checkMain(){
+        var parent = this.parentNode;
+        var children = parent.childNodes;
+        var imgCheckedDiv = $("#img-checked");
+        var thumbnailInput = $("#thumbnailInput");
+
+        for (var i=0; i < children.length; i++) {
+            if (children[i].id == "img-checked") {
+                imgCheckedDiv.remove();
+                thumbnailInput.val("");
+                return;
+            }
+        }
+        imgCheckedDiv.remove();
+        var check = document.createElement("i");
+        check.className = "fa fa-check-circle-o";
+        check.id = "img-checked";
+        parent.appendChild(check);
+        thumbnailInput.val(this.title);
+
+    }
+
+    function rotateImage(){
+        var parent = this.parentNode;
+        var children = parent.childNodes;
+        for (var i=0; i < children.length; i++) {
+            if (children[i].tagName == "IMG") {
+                img = children[i];
+                break;
+            }
+        }
+        var number = img.className.replace(/[^0-9]/g, '');
+        var angle = parseInt(number);
+
+        angle = (angle+90)%360;
+        img.className = "preview-thumbnail rotate"+angle;
+
+        input = $('input[name="rotation['+img.title+']"]');
+        if(angle !=0 && angle != ""){
+            if(input.length > 0) input.remove();
+            rotationInput = "<input type='hidden' name='rotation["+ img.title +"]' value='"+ angle +"' multiple >";
+            $("#postForm").append(rotationInput);
+        }else{
+            if(input.length > 0) input.remove();
+        }
+
+    }
+
+    function previewImages(){
+        fileSize = 0;
+        fileCount = 0;
+        var imagesContainer = $("#images_preview");
+        imagesContainer.html("");
+        var preview = document.querySelector('#images_preview');
+        if (this.files)
+            [].forEach.call(this.files, readAndPreview);
+
+        function readAndPreview(file) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function() {
+                var imgContainer = document.createElement("div");
+                imgContainer.className = "img-container";
+                imgContainer.height = 200;
+                var rotateButton = document.createElement("i");
+                rotateButton.className = "img-rotate fa fa-repeat";
+                rotateButton.addEventListener("click",rotateImage);
+                var image = new Image();
+                image.height = 200;
+                image.className = "preview-thumbnail rotate0";
+                image.addEventListener("click",checkMain);
+                image.title  = file.name;
+                image.src    = this.result;
+                imgContainer.appendChild(image);
+                imgContainer.appendChild(rotateButton);
+                preview.appendChild(imgContainer);
+
+                fileSize+= file.size;
+                fileCount++;
+            }, false);
+            reader.readAsDataURL(file);
+
+        }
+        imagesContainer.append("<div class='info'>Select one image by clicking on its thumbnail to set it as a post main preview image. In other case - first image will be used.</div>");
+    }
+    document.querySelector('#images').addEventListener("change", previewImages, false);
+
+    $('#postForm').submit(function() {
+        var errorContainer = $("#errors");
+        errorContainer.html("");
+        var errors = [];
+        if (fileSize > maxFileSize) {
+            var readableCurrent = Math.round(fileSize/1024) + "Kb";
+            var readableMax = Math.round(maxFileSize/1024) + "Kb";
+            errors.push("Your images weight " + readableCurrent + ". Maximum weight is " + readableMax);
+        }
+        if(fileCount > maxFileCount)
+            errors.push("You are trying to upload " + fileCount + " images. Maximum upload is " + maxFileCount + " images per post");
+        if($("#title").val() == "" )
+            errors.push("You have to specify title name for the post.");
+
+        if(errors.length > 0) {
+            console.log(errors);
+            $.each(errors, function (idx) {
+                var errorDiv = "<div class='error'>"+errors[idx]+"</div>";
+                errorContainer.append(errorDiv);
+            });
+            $('html, body').animate({
+                scrollTop: errorContainer.offset().top
+            }, 400);
+            return false;
+        }
+        return true;
+    });
+</script>
