@@ -1,10 +1,18 @@
 <div id="center" class="col-1-1">
     <form id="postForm" class="admin-input" method="POST" action="/admin/post/update" enctype="multipart/form-data">
-        <?php var_dump($post); ?>
-        <?php var_dump($images); ?>
+        <input id="title" class="clear" type="text" placeholder="Title" name="title" value="<?= $post["title"] ?>">
+        <textarea class="clear" name="description" id="description" placeholder="Post content..."><?= $post["description"] ?></textarea>
+        <input name="tags" id="tags" value="<?= $post["tags"] ?? ""?>" />
 
-        <input id="title" class="clear" type="text" placeholder="Title" name="title">
-        <textarea class="clear" name="description" id="description" placeholder="Post content..."></textarea>
+        <div id="currentImages">
+            <?php foreach ($images as $img): ?>
+                <div class="img-container">
+                    <img height="200" src="<?=$imgFolder . $img["filename"] . '.' . $img["extension"] ?>">
+                    <i class="fa fa-trash img-delete" data-id="<?=$img["id"]?>" aria-hidden="true"></i>
+                </div>
+
+            <?php endforeach; ?>
+        </div>
 
         <div>Maximum size for all images : <?= $maxSize ?>b</div>
         <div>Maximum images per post : <?= $maxCount ?></div>
@@ -13,7 +21,7 @@
             <input type="file" name="images[]" id="images" multiple >
         </div>
 
-        <div id="images_preview"></div>
+        <div id="imagesPreview"></div>
 
         <div>
             <input class="clear btn-success" type="submit" name="submit" value="Save">
@@ -30,6 +38,21 @@
     var maxFileCount = <?= $maxCount ?>;
     var fileSize = 0;
     var fileCount = 0;
+    var availableTags = <?= $tags ?? "[];" ?>;
+
+    $(".img-delete").on("click",function(){
+        if (!confirm("Delete image ?")){
+            return false;
+        }
+    });
+
+    $('#tags').tagsInput({
+        'height':'26px',
+        'width':'98.9%',
+        autocomplete_url: availableTags,
+        autocomplete:{selectFirst:true,width:'100px',autoFill:true},
+        'defaultText':'Add a tag'
+    });
 
     $('#description').trumbowyg({
         btns: [
@@ -90,15 +113,14 @@
         }else{
             if(input.length > 0) input.remove();
         }
-
     }
 
     function previewImages(){
         fileSize = 0;
         fileCount = 0;
-        var imagesContainer = $("#images_preview");
+        var imagesContainer = $("#imagesPreview");
         imagesContainer.html("");
-        var preview = document.querySelector('#images_preview');
+        var preview = document.querySelector('#imagesPreview');
         if (this.files)
             [].forEach.call(this.files, readAndPreview);
 

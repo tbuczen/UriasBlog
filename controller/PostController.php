@@ -7,11 +7,13 @@
 class PostController extends BaseController
 {
 
-    public function newPostAction(){
+    public function createAction(){
+        $this->checkPermission();
         $size = ini_get('post_max_size');
         $sizeBytes = $this->return_bytes($size);
         if(isset($_POST["submit"])){
             $title = $_POST["title"];
+            $tags = $_POST["tags"];
             $description = $_POST["description"] ?? "";
             $thumbnail = $_POST["thumbnail"];
             $rotationArray = $_POST["rotation"] ?? [];
@@ -19,7 +21,7 @@ class PostController extends BaseController
             $userId = $_SESSION["user"]["id"];
             $this->db->insert("post",[
                 "date" => date("Y-m-d H:i:s"),
-                "tags" => "forest;canada;alberta",
+                "tags" => $tags,
                 "description" => $description,
                 "title" => $title,
                 "author_id" => $userId,
@@ -93,6 +95,7 @@ class PostController extends BaseController
             }
         }
 
+        $this->vc->assign('tags',$this->getAllTags());
         $this->vc->assign('maxSize',$size);
         $this->vc->assign('maxSizeBytes',$sizeBytes);
         $this->vc->assign('maxCount',ini_get('max_file_uploads'));
@@ -102,7 +105,8 @@ class PostController extends BaseController
     /**
      * @param $params [id]
      */
-    public function postEditAction($params){
+    public function updateAction($params){
+        $this->checkPermission();
         extract($params);
         $post = $this->db->fetchOne("post",["id" => $id]);
         $images = $this->db->fetch("media",["post_id" => $id]);
@@ -110,18 +114,25 @@ class PostController extends BaseController
         $size = ini_get('post_max_size');
         $sizeBytes = $this->return_bytes($size);
 
+        $date = explode(" ",$post["date"]);
+        $date = reset($date);
+        $title = str_replace(" ","_",$post["title"]);
+
+        $this->vc->assign('tags',$this->getAllTags());
+        $this->vc->assign('imgFolder',"/uploads/$date/$title/");
         $this->vc->assign('maxSize',$size);
         $this->vc->assign('maxSizeBytes',$sizeBytes);
         $this->vc->assign('maxCount',ini_get('max_file_uploads'));
         $this->vc->assign('post',$post);
         $this->vc->assign('images',$images);
-        $this->vc->renderAll("editPost","admin");
+        $this->vc->renderAll("updatePost","admin");
     }
 
     /**
      * @param $params [id]
      */
-    public function postDeleteAction($params){
+    public function deleteAction($params){
+        $this->checkPermission();
         extract($params);
         $post = $this->db->fetchOne("post",["id" => $id],"date, title");
         $title = $post["title"];
@@ -209,5 +220,18 @@ class PostController extends BaseController
             }
         }
         rmdir($dirPath);
+    }
+
+    protected function getAllTags(){
+        $posts = $this->db->fetch('post',null,"tags");
+        $allTags = [];
+        foreach ($posts as $post) {
+            $postTags = $post["tags"];
+            if(!empty($postTags)) {
+                $postTagsArray = explode(",", $postTags);
+                $allTags = array_merge($allTags, $postTagsArray);
+            }
+        }
+        return '["' . implode('", "', $allTags) . '"]';
     }
 }

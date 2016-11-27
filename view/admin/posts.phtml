@@ -13,7 +13,8 @@
             <td><?=$post["date"];?></td>
             <td><?=$post["title"];?></td>
             <td><a href="/admin/post/edit/<?=$post["id"];?>">Edit</a></td>
-            <td><a class="delete" href="/admin/post/delete/<?=$post["id"];?>">Delete</td>
+            <td><a class="delete" href="/admin/post/delete/<?=$post["id"];?>"><i class="fa fa-remove" aria-hidden="true"></i></a>
+            </td>
         </tr>
         <?php endforeach; ?>
     </table>

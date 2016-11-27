@@ -84,4 +84,19 @@ class BaseController
         }
         echo "</pre>";
     }
+
+    /**
+     * @return bool
+     */
+    public function isLoggedIn(){
+        return (isset($_SESSION["user"]))? true:false;
+    }
+
+    public function checkPermission(){
+        if(!$this->isLoggedIn()){
+            $this->redirect("login");
+            return false;
+        }
+        return true;
+    }
 }

@@ -7,12 +7,6 @@
 class AdminController extends BaseController
 {
 
-    /**
-     * @return bool
-     */
-    private function isLoggedIn(){
-        return (isset($_SESSION["user"]))? true:false;
-    }
 
     public function createUser($user,$password,$nickname,$email=""){
         $options = ['cost' => 12];
@@ -46,14 +40,14 @@ class AdminController extends BaseController
     }
 
     public function adminAction(){
-        if(!$this->isLoggedIn())
-            $this->redirect("login");
+        $this->checkPermission();
         $posts = $this->db->fetch("post");
         $this->vc->assign('posts',$posts);
         $this->vc->renderAll("posts","admin");
     }
 
     public function userListAction(){
+        $this->checkPermission();
         $users = $this->db->fetch("user");
         $this->vc->assign('users',$users);
         $this->vc->renderAll("users","admin");

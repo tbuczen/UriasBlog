@@ -2,7 +2,7 @@
     <form id="postForm" class="admin-input" method="POST" action="/admin/post/create" enctype="multipart/form-data">
         <input id="title" class="clear" type="text" placeholder="Title" name="title">
         <textarea class="clear" name="description" id="description" placeholder="Post content..."></textarea>
-
+        <input name="tags" id="tags" value="" />
         <div>Maximum size for all images : <?= $maxSize ?>b</div>
         <div>Maximum images per post : <?= $maxCount ?></div>
         <div class="upload">
@@ -10,7 +10,7 @@
             <input type="file" name="images[]" id="images" multiple >
         </div>
 
-        <div id="images_preview"></div>
+        <div id="imagesPreview"></div>
 
         <div>
             <input class="clear btn-success" type="submit" name="submit" value="Save">
@@ -22,11 +22,37 @@
     </form>
 </div>
 
-<script type="application/javascript" async>
-    var maxFileSize = <?= $maxSizeBytes ?>;
-    var maxFileCount = <?= $maxCount ?>;
+<script type="application/javascript">
+    var maxFileSize = <?= $maxSizeBytes ?? 0?>;
+    var maxFileCount = <?= $maxCount ?? 0 ?>;
     var fileSize = 0;
     var fileCount = 0;
+    var availableTags = <?= $tags ?? "[];" ?>;
+
+    $('#tags').tagsInput({
+        'height':'35px',
+        'width':'98.9%',
+        autocomplete_url: availableTags,
+        autocomplete:{selectFirst:true,width:'100px',autoFill:true},
+        'defaultText':'Add a tag'
+    });
+
+//    {
+//        'autocomplete_url': url_to_autocomplete_api,
+//        'autocomplete': { option: value, option: value},
+//        'height':'100px',
+//        'width':'300px',
+//        'interactive':true,
+//        'defaultText':'add a tag',
+//        'onAddTag':callback_function,
+//        'onRemoveTag':callback_function,
+//        'onChange' : callback_function,
+//        'delimiter': [',',';'],   // Or a string with a single delimiter. Ex: ';'
+//        'removeWithBackspace' : true,
+//        'minChars' : 0,
+//        'maxChars' : 0, // if not provided there is no limit
+//        'placeholderColor' : '#666666'
+//    }
 
     $('#description').trumbowyg({
         btns: [
@@ -93,9 +119,9 @@
     function previewImages(){
         fileSize = 0;
         fileCount = 0;
-        var imagesContainer = $("#images_preview");
+        var imagesContainer = $("#imagesPreview");
         imagesContainer.html("");
-        var preview = document.querySelector('#images_preview');
+        var preview = document.querySelector('#imagesPreview');
         if (this.files)
             [].forEach.call(this.files, readAndPreview);
 

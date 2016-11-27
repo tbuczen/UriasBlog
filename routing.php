@@ -18,7 +18,7 @@ $ROUTING = [
     "logout" => "Admin:logout",
 
     "admin/post/@id" => "Post:postDetails",
-    "admin/post/delete/@id" => "Post:postDelete",
-    "admin/post/edit/@id" => "Post:postEdit",
-    "admin/post/create" => "Post:newPost",
+    "admin/post/delete/@id" => "Post:delete",
+    "admin/post/edit/@id" => "Post:update",
+    "admin/post/create" => "Post:create",
 ];
