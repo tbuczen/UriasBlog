@@ -17,3 +17,5 @@ TODO::
   0. try to integrate with fb, discuss, twitter - simple user register
   1. guest comment + captcha
   2. guest comment remove in panel
+
+test git from android
