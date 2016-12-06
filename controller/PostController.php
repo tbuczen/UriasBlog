@@ -111,6 +111,24 @@ class PostController extends BaseController
         $post = $this->db->fetchOne("post",["id" => $id]);
         $images = $this->db->fetch("media",["post_id" => $id]);
 
+
+        if(isset($_POST["submit"])) {
+            $title = $_POST["title"];
+            $tags = $_POST["tags"];
+            $description = $_POST["description"] ?? "";
+            $thumbnail = $_POST["thumbnail"];
+            $rotationArray = $_POST["rotation"] ?? [];
+
+            $this->dump($_POST);
+
+            $this->db->update("post",[
+                "tags" => $tags,
+                "description" => $description,
+                "title" => $title,
+                "location" => "[x,y]"
+            ],$id);
+        }
+
         $size = ini_get('post_max_size');
         $sizeBytes = $this->return_bytes($size);
 
@@ -221,6 +239,8 @@ class PostController extends BaseController
         }
         rmdir($dirPath);
     }
+
+
 
     protected function getAllTags(){
         $posts = $this->db->fetch('post',null,"tags");

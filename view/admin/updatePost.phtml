@@ -1,5 +1,5 @@
 <div id="center" class="col-1-1">
-    <form id="postForm" class="admin-input" method="POST" action="/admin/post/update" enctype="multipart/form-data">
+    <form id="postForm" class="admin-input" method="POST" action="/admin/post/edit/<?= $post['id'];?>" enctype="multipart/form-data">
         <input id="title" class="clear" type="text" placeholder="Title" name="title" value="<?= $post["title"] ?>">
         <textarea class="clear" name="description" id="description" placeholder="Post content..."><?= $post["description"] ?></textarea>
         <input name="tags" id="tags" value="<?= $post["tags"] ?? ""?>" />
@@ -10,7 +10,6 @@
                     <img height="200" src="<?=$imgFolder . $img["filename"] . '.' . $img["extension"] ?>">
                     <i class="fa fa-trash img-delete" data-id="<?=$img["id"]?>" aria-hidden="true"></i>
                 </div>
-
             <?php endforeach; ?>
         </div>
 

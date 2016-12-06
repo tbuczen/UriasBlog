@@ -9,7 +9,7 @@
         </tr>
         <?php foreach ($posts as $key => $post) : ?>
         <tr>
-            <td><?=$key?></td>
+            <td><?=$key+1?></td>
             <td><?=$post["date"];?></td>
             <td><?=$post["title"];?></td>
             <td><a href="/admin/post/edit/<?=$post["id"];?>">Edit</a></td>

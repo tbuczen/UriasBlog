@@ -265,3 +265,37 @@ input[type="file"]{
     color: #e74c3c;
     font-weight: bold;
 }
+
+/*table*/
+th {
+    color:#D5DDE5;;
+    background:#4494ff;
+    font-size:23px;
+    font-weight: 100;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+}
+tr {
+    border-top: 1px solid #C1C3D1;
+    border-bottom: 1px solid #C1C3D1;
+    color:#666B85;
+    font-size:16px;
+    font-weight:normal;
+}
+tr:nth-child(odd) td {
+    background:#EBEBEB;
+}
+td {
+    background:#FFFFFF;
+    padding:18px;
+    text-align:left;
+    vertical-align:middle;
+    font-weight:300;
+    font-size:18px;
+    border-right: 1px solid #C1C3D1;
+}
+
+.delete{
+    color:red;
+}
