@@ -6,11 +6,19 @@
  */
 class PostController extends BaseController
 {
+    public $size;
+    public $sizeBytes;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->size = ini_get('post_max_size');
+        $this->sizeBytes = $this->return_bytes($this->size);
+    }
 
     public function createAction(){
         $this->checkPermission();
-        $size = ini_get('post_max_size');
-        $sizeBytes = $this->return_bytes($size);
+
         if(isset($_POST["submit"])){
             $title = $_POST["title"];
             $tags = $_POST["tags"];
@@ -29,75 +37,12 @@ class PostController extends BaseController
             ]);
             $postId = $this->db->getLastInsertId();
 
-            if(isset($_FILES["images"])) {
-                $sentSize = array_sum($_FILES["images"]["size"]);
-                if($sentSize <= $sizeBytes){
-
-                    //create dir
-                    $directory = 'uploads/'. date("Y-m-d"). "/" .str_replace(" ","_",$title) ."/";
-                    if (!file_exists($directory)) {
-                        mkdir($directory, 0777, true);
-                    }
-
-                    foreach ($this->reArrayFiles($_FILES) as $file) {
-                        //get mime type
-                        $finfo = new finfo(FILEINFO_MIME_TYPE);
-                        if (false === $ext = array_search(
-                                $finfo->file($file['tmp_name']),
-                                array(
-                                    'jpeg' => 'image/jpeg',
-                                    'png' => 'image/png',
-                                    'gif' => 'image/gif',
-                                ),
-                                true
-                            )
-                        )
-                            throw new RuntimeException('Invalid file format.');
-
-                        //upload
-                        $hashed = sha1_file($file['tmp_name']);
-                        if (!move_uploaded_file(
-                            $file['tmp_name'],
-                            sprintf($directory . '%s.%s',
-                                $hashed,
-                                $ext
-                            )
-                        )
-                        )
-                            throw new RuntimeException('Failed to move uploaded file.');
-
-                        //rotate and cut
-                        $source = $directory.$hashed.'.'.$ext;
-                        if(array_key_exists($file["name"],$rotationArray)){
-                            $degrees = $rotationArray[$file["name"]];
-                            $this->imgPostUpload($source,$degrees,80);
-                        }else{
-                            $this->imgPostUpload($source,null,80);
-                        }
-
-                        //save hashed thumnail name
-                        if($file["name"] == $thumbnail || $thumbnail == null){
-                            $thumbnail = $hashedThumbnail = $hashed.'.'.$ext;
-                            $this->db->update("post",["thumbnail" => $hashedThumbnail],$postId);
-                        }
-
-                        $this->db->insert("media",[
-                            "filename" => $hashed,
-                            "extension" => $ext,
-                            "originalName" => $file["name"],
-                            "post_id" => $postId,
-                            "type" => 'image',
-                        ]);
-                    }
-                }else{
-                    $this->vc->assign('error',$size);
-                }
-            }
+            $this->uploadImages($title, $rotationArray, $thumbnail, $postId);
         }
 
         $this->vc->assign('tags',$this->getAllTags());
-        $this->vc->assign('maxSize',$size);
-        $this->vc->assign('maxSizeBytes',$sizeBytes);
+        $this->vc->assign('maxSize',$this->size);
+        $this->vc->assign('maxSizeBytes',$this->sizeBytes);
         $this->vc->assign('maxCount',ini_get('max_file_uploads'));
         $this->vc->renderAll("newPost","admin");
     }
@@ -127,6 +72,8 @@ class PostController extends BaseController
                 "title" => $title,
                 "location" => "[x,y]"
             ],$id);
+
+            $this->uploadImages($title, $rotationArray, $thumbnail, $id);
         }
 
         $size = ini_get('post_max_size');
@@ -253,5 +200,79 @@ class PostController extends BaseController
             }
         }
         return '["' . implode('", "', $allTags) . '"]';
+    }
+
+    /**
+     * @param $title
+     * @param $rotationArray
+     * @param $thumbnail
+     * @param $postId
+     */
+    protected function uploadImages($title, $rotationArray, $thumbnail, $postId)
+    {
+        if (isset($_FILES["images"])) {
+            $sentSize = array_sum($_FILES["images"]["size"]);
+            if ($sentSize <= $this->sizeBytes) {
+
+                //create dir
+                $directory = 'uploads/' . date("Y-m-d") . "/" . str_replace(" ", "_", $title) . "/";
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0777, true);
+                }
+
+                foreach ($this->reArrayFiles($_FILES) as $file) {
+                    //get mime type
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    if (false === $ext = array_search(
+                            $finfo->file($file['tmp_name']),
+                            array(
+                                'jpeg' => 'image/jpeg',
+                                'png' => 'image/png',
+                                'gif' => 'image/gif',
+                            ),
+                            true
+                        )
+                    )
+                        throw new RuntimeException('Invalid file format.');
+
+                    //upload
+                    $hashed = sha1_file($file['tmp_name']);
+                    if (!move_uploaded_file(
+                        $file['tmp_name'],
+                        sprintf($directory . '%s.%s',
+                            $hashed,
+                            $ext
+                        )
+                    )
+                    )
+                        throw new RuntimeException('Failed to move uploaded file.');
+
+                    //rotate and cut
+                    $source = $directory . $hashed . '.' . $ext;
+                    if (array_key_exists($file["name"], $rotationArray)) {
+                        $degrees = $rotationArray[$file["name"]];
+                        $this->imgPostUpload($source, $degrees, 80);
+                    } else {
+                        $this->imgPostUpload($source, null, 80);
+                    }
+
+                    //save hashed thumnail name
+                    if ($file["name"] == $thumbnail || $thumbnail == null) {
+                        $thumbnail = $hashedThumbnail = $hashed . '.' . $ext;
+                        $this->db->update("post", ["thumbnail" => $hashedThumbnail], $postId);
+                    }
+
+                    $this->db->insert("media", [
+                        "filename" => $hashed,
+                        "extension" => $ext,
+                        "originalName" => $file["name"],
+                        "post_id" => $postId,
+                        "type" => 'image',
+                    ]);
+                }
+            } else {
+                $this->vc->assign('error', $this->size);
+            }
+        }
     }
 }
