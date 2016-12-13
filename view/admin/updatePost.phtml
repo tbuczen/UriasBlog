@@ -33,6 +33,7 @@
 </div>
 
 <script type="application/javascript" async>
+    var unsaved = false;
     var maxFileSize = <?= $maxSizeBytes ?>;
     var maxFileCount = <?= $maxCount ?>;
     var fileSize = 0;
@@ -40,8 +41,10 @@
     var availableTags = <?= $tags ?? "[];" ?>;
 
     $(".img-delete").on("click",function(){
-        if (!confirm("Delete image ?")){
-            return false;
+        if (confirm("Delete image ?")){
+            $(this).parent().fadeOut(300);
+            unsaved = true;
+            return true;
         }
     });
 

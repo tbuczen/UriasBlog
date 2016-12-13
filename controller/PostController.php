@@ -56,7 +56,6 @@ class PostController extends BaseController
         $post = $this->db->fetchOne("post",["id" => $id]);
         $images = $this->db->fetch("media",["post_id" => $id]);
 
-
         if(isset($_POST["submit"])) {
             $title = $_POST["title"];
             $tags = $_POST["tags"];
@@ -74,6 +73,7 @@ class PostController extends BaseController
             ],$id);
 
             $this->uploadImages($title, $rotationArray, $thumbnail, $id);
+            $this->redirect("admin/post/edit/$id");
         }
 
         $size = ini_get('post_max_size');
@@ -96,7 +96,7 @@ class PostController extends BaseController
     /**
      * @param $params [id]
      */
-    public function deleteAction($params){
+    public function deleteAction(array $params){
         $this->checkPermission();
         extract($params);
         $post = $this->db->fetchOne("post",["id" => $id],"date, title");
@@ -109,7 +109,7 @@ class PostController extends BaseController
         $this->redirect("admin");
     }
 
-    protected function return_bytes($val) {
+    protected function return_bytes(string $val) : int{
         $val = trim($val);
         $last = strtolower($val[strlen($val)-1]);
         switch($last) {
@@ -123,7 +123,7 @@ class PostController extends BaseController
         return $val;
     }
 
-    protected function reArrayFiles(&$file_post) {
+    protected function reArrayFiles(&$file_post) : array {
         $file_ary = array();
         $file_count = count($file_post["images"]["name"]);
         $file_keys = array_keys($file_post["images"]);
@@ -137,11 +137,8 @@ class PostController extends BaseController
 
     /**
      * Image rotation and quality change
-     * @param $src
-     * @param null $degrees
-     * @param $quality
      */
-    private function imgPostUpload($src, $degrees = null, $quality) {
+    private function imgPostUpload(string $src,int $degrees = null,int $quality) {
         $system = explode(".", $src);
         if (preg_match("/jpg|jpeg/", $system[1]))
             $src_img=imagecreatefromjpeg($src);
@@ -187,9 +184,7 @@ class PostController extends BaseController
         rmdir($dirPath);
     }
 
-
-
-    protected function getAllTags(){
+    protected function getAllTags() : string{
         $posts = $this->db->fetch('post',null,"tags");
         $allTags = [];
         foreach ($posts as $post) {
@@ -199,16 +194,10 @@ class PostController extends BaseController
                 $allTags = array_merge($allTags, $postTagsArray);
             }
         }
-        return '["' . implode('", "', $allTags) . '"]';
+        return '["' . implode('", "', array_unique($allTags)) . '"]';
     }
 
-    /**
-     * @param $title
-     * @param $rotationArray
-     * @param $thumbnail
-     * @param $postId
-     */
-    protected function uploadImages($title, $rotationArray, $thumbnail, $postId)
+    protected function uploadImages(string $title,array $rotationArray,string $thumbnail, $postId)
     {
         if (isset($_FILES["images"])) {
             $sentSize = array_sum($_FILES["images"]["size"]);
@@ -220,7 +209,7 @@ class PostController extends BaseController
                     mkdir($directory, 0777, true);
                 }
 
-                foreach ($this->reArrayFiles($_FILES) as $file) {
+                foreach ($this->reArrayFiles($_FILES) as $key => $file) {
                     //get mime type
                     $finfo = new finfo(FILEINFO_MIME_TYPE);
                     if (false === $ext = array_search(
@@ -257,7 +246,7 @@ class PostController extends BaseController
                     }
 
                     //save hashed thumnail name
-                    if ($file["name"] == $thumbnail || $thumbnail == null) {
+                    if ($file["name"] == $thumbnail || ( $thumbnail == null && $key == 0)) {
                         $thumbnail = $hashedThumbnail = $hashed . '.' . $ext;
                         $this->db->update("post", ["thumbnail" => $hashedThumbnail], $postId);
                     }
