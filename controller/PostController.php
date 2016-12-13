@@ -62,8 +62,9 @@ class PostController extends BaseController
             $description = $_POST["description"] ?? "";
             $thumbnail = $_POST["thumbnail"];
             $rotationArray = $_POST["rotation"] ?? [];
+            $deleteArray = $_POST["delete"] ?? [];
 
-            $this->dump($_POST);
+            $this->removeImages($deleteArray);
 
             $this->db->update("post",[
                 "tags" => $tags,
@@ -263,5 +264,12 @@ class PostController extends BaseController
                 $this->vc->assign('error', $this->size);
             }
         }
+    }
+
+
+    private function removeImages(array $ids)
+    {
+        foreach ($ids as $name => $id)
+            $this->db->delete("media",["id" => $id]);
     }
 }

@@ -8,7 +8,7 @@
             <?php foreach ($images as $img): ?>
                 <div class="img-container">
                     <img height="200" src="<?=$imgFolder . $img["filename"] . '.' . $img["extension"] ?>">
-                    <i class="fa fa-trash img-delete" data-id="<?=$img["id"]?>" aria-hidden="true"></i>
+                    <i class="fa fa-trash img-delete" data-id="<?=$img["id"]?>" data-name="<?=$img["filename"]?>" aria-hidden="true"></i>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -44,6 +44,10 @@
         if (confirm("Delete image ?")){
             $(this).parent().fadeOut(300);
             unsaved = true;
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            rotationInput = "<input type='hidden' name='delete[" + name + "]' value='"+ id +"' multiple >";
+            $("#postForm").append(rotationInput);
             return true;
         }
     });
