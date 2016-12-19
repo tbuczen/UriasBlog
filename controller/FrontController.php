@@ -37,33 +37,8 @@ class FrontController extends BaseController
     public function mainAction($params = null){
         extract($params);
         //check search
-        if(isset($page) && $page !== null){
-            //load pagination
-        }else{
-            $posts = array(
-                array("title" => "Article1",
-                    "tags" => "#nature,#alberta,#rockymountains,#wildlife,#rawsonLake",
-                    "date" => "2016-08-20",
-                    "img_main" => "img1.jpg",
-                    "img_gallery" => array(),
-                    "description" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non quis exercitationem culpa nesciunt nihil aut nostrum explicabo reprehenderit optio amet ab temporibus asperiores quasi cupiditate. Voluptatum ducimus voluptates voluptas?"
-                ),
-                array("title" => "Takie tam",
-                    "tags" => "#nature,#alberta,#rockymountains,#wildlife,#rawsonLake",
-                    "date" => "2016-08-22",
-                    "img_main" => "img1.jpg",
-                    "img_gallery" => array(),
-                    "description" => "Morbi nibh. Maecenas tortor quis suscipit mauris. Pellentesque habitant morbi tristique interdum. Donec pulvinar interdum, lacus. Vestibulum massa vel nulla. Phasellus adipiscing. Nunc vehicula. Nunc elementum. Morbi accumsan at, suscipit wisi. "
-                ),
-                array("title" => "Test",
-                    "tags" => "#nature,#alberta,#rockymountains,#wildlife,#rawsonLake",
-                    "date" => "2016-08-22",
-                    "img_main" => "img1.jpg",
-                    "img_gallery" => array(),
-                    "description" => "Praesent scelerisque condimentum ante eget nulla. Phasellus ac ipsum. Fusce ullamcorper varius risus vehicula convallis tellus. Vestibulum consectetuer sagittis luctus mauris sit amet, consectetuer vulputate tempor interdum dui nulla, vitae est."
-                )
-            );
-        }
+        $page = $page ?? 0;
+        $posts = $this->getArticles($page);
         $this->vc->assign('posts',$posts);
         $this->vc->assign('title',"Main");
         $this->vc->renderAll("main");
@@ -105,5 +80,25 @@ class FrontController extends BaseController
             $this->sc->setLayout("list");
         }
         $this->routing->redirect();
+    }
+
+    private function getArticles($page)
+    {
+        $formattedPosts = [];
+        $limit = $page*POST_PER_PAGE . "," . POST_PER_PAGE;
+        $posts = $this->db->fetch("post",[],"*",$limit);
+        foreach ($posts as $key => $post){
+            $formattedPosts[$key] = $post;
+
+            $thumbnail = $post["thumbnail"];
+            if(empty($thumbnail)){
+                //get first media associated with this post
+//                $thumbnail =
+            }
+            $formattedPosts[$key]["thumbnail"] = $post;
+            $this->dump($post);
+        }
+
+        return $formattedPosts;
     }
 }

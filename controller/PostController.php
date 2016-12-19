@@ -202,7 +202,7 @@ class PostController extends BaseController
     {
         if (isset($_FILES["images"])) {
             $sentSize = array_sum($_FILES["images"]["size"]);
-            if ($sentSize <= $this->sizeBytes) {
+            if ($sentSize <= $this->sizeBytes && $sentSize > 0) {
 
                 //create dir
                 $directory = 'uploads/' . date("Y-m-d") . "/" . str_replace(" ", "_", $title) . "/";
