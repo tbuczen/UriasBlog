@@ -92,11 +92,16 @@ class BaseController
         return (isset($_SESSION["user"]))? true:false;
     }
 
-    public function checkPermission(){
+    public function checkPermission() : bool{
         if(!$this->isLoggedIn()){
             $this->redirect("login");
             return false;
         }
         return true;
+    }
+
+    public function urlize(string $word,$ws = "-") : string{
+        $word = str_replace(" ",$ws,$word);
+        return $word;
     }
 }

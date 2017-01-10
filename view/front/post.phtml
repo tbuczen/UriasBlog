@@ -1,7 +1,7 @@
 <?php $shareUrl = 'http://'.$_SERVER['HTTP_HOST'].DS."post".DS.$post["date"] .DS. $post["title"]; ?>
 <article>
     <!--    main image-->
-    <div id="mainImage"><img class="l-post-preview" src="/uploads/<?=$post["date"] .DS. $post["title"] .DS. $post["img_main"]?>"></div>
+    <div id="mainImage"><img class="l-post-preview" src="<?=$post["thumbnail"]?>"></div>
 
     <div id="gallery">
         thumbnails

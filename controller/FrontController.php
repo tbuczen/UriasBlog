@@ -39,7 +39,9 @@ class FrontController extends BaseController
         //check search
         $page = $page ?? 0;
         $posts = $this->getArticles($page);
+        $max = $this->db->count("post");
         $this->vc->assign('posts',$posts);
+        $this->vc->assign('paginationMaxPage',$max);
         $this->vc->assign('title',"Main");
         $this->vc->renderAll("main");
     }
@@ -87,16 +89,20 @@ class FrontController extends BaseController
         $formattedPosts = [];
         $limit = $page*POST_PER_PAGE . "," . POST_PER_PAGE;
         $posts = $this->db->fetch("post",[],"*",$limit);
+
         foreach ($posts as $key => $post){
             $formattedPosts[$key] = $post;
-
             $thumbnail = $post["thumbnail"];
             if(empty($thumbnail)){
                 //get first media associated with this post
-//                $thumbnail =
+                $t = $this->db->fetch("media",["post_id" => $post["id"]],"*",1);
+                $thumbnail = $t["filename"] . "." . $t["extension"];
             }
-            $formattedPosts[$key]["thumbnail"] = $post;
-            $this->dump($post);
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', $post["date"]);
+            $dateFolder = $date->format('Y-m-d');
+            $imgPath = "uploads" .DS. $dateFolder .DS. $this->urlize($post["title"],"_") .DS. $thumbnail;
+            $formattedPosts[$key]["thumbnail"] = $imgPath;
+            $formattedPosts[$key]["date"] = $dateFolder;
         }
 
         return $formattedPosts;

@@ -48,6 +48,7 @@ and (max-device-width: 1920px) {
 
     .l-post-preview{
         max-width: 1000px;
+        max-height: 400px;
     }
 
     .l-post-description{

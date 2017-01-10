@@ -24,10 +24,12 @@ class Db
      * @param $table string - Table name
      * @param $data - array - Search array
      * @param null $limit
+     * @param null $limit
      * @param string $columns
+     * @param null $sort
      * @return array
      */
-    public function fetch($table,$data = null, $columns = "*",$limit = null)
+    public function fetch(string $table,$data = null,string $columns = "*",$limit = null,$sort = null) : array
     {
         $conditions = array();
         if($data != null) {
@@ -48,6 +50,34 @@ class Db
 
         if($limit !== null)
             $query .= " LIMIT $limit";
+
+        if($sort !== null)
+            $query .= " ORDER BY {$sort["column"]} {$sort["order"]}";
+        $stmt = $this->PDO->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+
+        if($limit == 1) return reset($result);
+        return $result;
+    }
+
+    public function count($table,$data = null, $columns = "*"){
+        $conditions = array();
+        if($data != null) {
+            foreach ($data as $column => $value) {
+                if (is_string($value)) {
+                    $conditions[] = "$column LIKE '$value'";
+                } else if (is_float($value) || is_int($value)) {
+                    $conditions[] = "$column = $value";
+                } else if (is_array($value)) {
+                    $conditions[] = "$column IN ( " . implode(",", $value) . " )";
+                }
+            }
+            $conditions = implode(" AND ", $conditions);
+            $query ="SELECT COUNT(*) as cnt FROM `$table` WHERE $conditions";
+        }else{
+            $query ="SELECT COUNT(*) as cnt FROM `$table`";
+        }
         $stmt = $this->PDO->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll();

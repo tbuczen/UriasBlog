@@ -205,7 +205,7 @@ class PostController extends BaseController
             if ($sentSize <= $this->sizeBytes && $sentSize > 0) {
 
                 //create dir
-                $directory = 'uploads/' . date("Y-m-d") . "/" . str_replace(" ", "_", $title) . "/";
+                $directory = 'uploads/' . date("Y-m-d") . "/" . $this->urlize($title,"_") . "/";
                 if (!file_exists($directory)) {
                     mkdir($directory, 0777, true);
                 }
