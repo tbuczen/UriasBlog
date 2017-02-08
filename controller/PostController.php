@@ -56,8 +56,13 @@ class PostController extends BaseController
         $post = $this->db->fetchOne("post",["id" => $id]);
         $images = $this->db->fetch("media",["post_id" => $id]);
 
+        $oldTitle = $post["title"];
+        $date = explode(" ",$post["date"]);
+        $date = reset($date);
+
         if(isset($_POST["submit"])) {
             $title = $_POST["title"];
+
             $tags = $_POST["tags"];
             $description = $_POST["description"] ?? "";
             $thumbnail = $_POST["thumbnail"];
@@ -73,6 +78,14 @@ class PostController extends BaseController
                 "location" => "[x,y]"
             ],$id);
 
+            if(strcmp($title,$oldTitle) != 0){
+                var_dump("$title");
+                var_dump("$oldTitle");
+                //title has changed, rename folder
+                $newTitle = $this->urlize($title,"_");
+                rename ("uploads/$date/$oldTitle/","uploads/$date/$newTitle/");
+            }
+
             $this->uploadImages($title, $rotationArray, $thumbnail, $id);
             $this->redirect("admin/post/edit/$id");
         }
@@ -80,8 +93,6 @@ class PostController extends BaseController
         $size = ini_get('post_max_size');
         $sizeBytes = $this->return_bytes($size);
 
-        $date = explode(" ",$post["date"]);
-        $date = reset($date);
         $title = str_replace(" ","_",$post["title"]);
 
         $this->vc->assign('tags',$this->getAllTags());
@@ -113,15 +124,16 @@ class PostController extends BaseController
     protected function return_bytes(string $val) : int{
         $val = trim($val);
         $last = strtolower($val[strlen($val)-1]);
+        $ret = 1;
         switch($last) {
             case 'g':
-                $val *= 1024;
+                $ret *= 1024;
             case 'm':
-                $val *= 1024;
+                $ret *= 1024;
             case 'k':
-                $val *= 1024;
+                $ret *= 1024;
         }
-        return $val;
+        return $ret;
     }
 
     protected function reArrayFiles(&$file_post) : array {
