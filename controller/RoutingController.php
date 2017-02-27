@@ -10,9 +10,10 @@ class RoutingController extends BaseController
     public function routeToPage($route)
     {
         if($route != "") {
-            if ($route[0] == "action") {
-                array_shift($route);
-                return $this->takeToAction($route);
+            $routeElements = explode("/", $route);
+            if ($routeElements[0] == "action") {
+                array_shift($routeElements);
+                return $this->takeToAction($routeElements);
             }
         }
         global $ROUTING;
@@ -82,7 +83,6 @@ class RoutingController extends BaseController
     {
         $controller = "front";
         $params = [];
-//        var_dump($actionArr);
         switch (reset($actionArr)) {
             case "changeView" :
                 $action = "changeView";
