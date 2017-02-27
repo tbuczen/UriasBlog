@@ -10,7 +10,7 @@ define("MODELS_DIR", 'model');
 define("VIEW_DIR", 'View');
 define("DS", '/');
 //posts per page
-define("PPP",10);
+define("POST_PER_PAGE",10);
 
 //autoload
 spl_autoload_register(function ($class_name) {
