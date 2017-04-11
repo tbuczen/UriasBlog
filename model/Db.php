@@ -156,6 +156,9 @@ class Db
         return false;
     }
 
-
+    public function getConfigVar($name) {
+        $value =  self::fetchOne("config", ["name" => $name], "value"); 
+        return $value["value"];
+    }
 
 }

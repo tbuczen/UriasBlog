@@ -1,34 +1,6 @@
 @media screen and (max-width: 991px){
-    #center,footer,header,nav{
-        margin: 0 auto;
-        padding: 0;
-    }
-    header{
-        font-size: 35px;
-        text-align: center;
-        min-height: 100px;
-        background-color: beige;
-    }
-
+ 
     /*NAV SECTION*/
-    nav{
-        height: 50px;
-    }
-    .nav-links{
-        float: left;
-    }
-
-    .changeView{
-        float: right;
-        margin-right: 10px;
-    }
-
-    #searchbar{
-        width: 200px;
-        float: right;
-        height: 50px;
-        background-color: antiquewhite;
-    }
 
     /*CENTER*/
     #center{

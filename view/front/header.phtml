@@ -4,31 +4,38 @@
         <meta name="description" content="Martikco photo blog">
         <meta name="keywords" content="Canada, photos, rocky mountains, USA, pictures, wildlife, blog">
         <meta name="author" content="">
-        <title><?=$title;?></title>
+        <title><?= $title; ?></title>
         <style rel="stylesheet" media="all"><?= $this->minifyCss(); ?></style>
         <script src="/view/js/jquery-1.12.4.min.js"></script>
     </head>
     <body>
         <header>
-            Martikco Photoblog
+            <a href="/" class="nolink"><?= $this->config('blog.name'); ?></a>
         </header>
         <nav>
             <div class="nav-links">
-                <a href="/">Main</a>
                 <a href="/about">About me</a>
                 <a href="/contact">Contact</a>
                 <a href="/legal_disclaimer">Legal Disclaimer</a>
                 <a href="/tags">Tags</a>
             </div>
 
-            <div id="searchbar">
-                <form action="">
-                    <input placeholder="Search by keywords">
-                </form>
+            <span class="clearfix"></span>
+
+            <div id="tools">
+                <div id="search">
+                    <form action="" method="GET">
+                        <input type="text" name="searchText" id="searchText" placeholder="Search"/>
+                        <input type="button" name="searchButton" id="searchButton"></a>
+                    </form>
+                </div>
+
+                <div class="changeView">
+                    <?php if ($viewName == "main") : ?><a href="/action/changeView" class="<?= $layout ?> icon nohover"></a> <?php endif; ?>
+                </div>
             </div>
 
-            <div class="changeView">
-                <?php if($viewName == "main" ) : ?><a href="/action/changeView" class="<?=$layout?> icon nohover"></a> <?php endif; ?>
-            </div>
+            <span class="clearfix"></span>
         </nav>
-        <div id="center">
+        <div id="content">
+            <nav id="timeline"></nav>

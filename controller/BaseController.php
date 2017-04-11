@@ -18,7 +18,7 @@ class BaseController
     public function __construct()
     {
         $this->db = new Db();
-        $this->vc = new ViewController();
+        $this->vc = new ViewController($this->db);
         $this->vc->assign('title',SITE_NAME);
     }
 

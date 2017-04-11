@@ -3,12 +3,14 @@
 class ViewController
 {
     private $htmlVars;
+    private $db;
 
-    public function __construct(){
+    public function __construct(Db $db){
         $this->htmlVars = new stdClass();
+        $this->db = $db;
     }
 
-    public function minifyCss($dir = null,array $files){
+    public function minifyCss($dir = null,array $files = null){
         $directory = $dir ?? "view/css/";
         $buffer = $this->getDirFilesBuffer($directory,$files);
         $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
@@ -17,7 +19,7 @@ class ViewController
         echo($buffer);
     }
 
-    public function minifyJs(string $dir = null,array $files) {
+    public function minifyJs(string $dir = null,array $files = null) {
         $directory = $dir ?? "view/css/";
         $input = $this->getDirFilesBuffer($directory,$files);
         global $SS, $CC;
@@ -54,6 +56,10 @@ class ViewController
      */
     public function assign($var, $value = ''){
         $this->htmlVars->$var = $value;
+    }
+    
+    public function config(string $name) : string {
+        return $this->db->getConfigVar($name);
     }
 
     /**

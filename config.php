@@ -24,7 +24,7 @@ spl_autoload_register(function ($class_name) {
 
 //DB
 $host = 'localhost';
-$db   = 'martikco';
+$db   = 'urias_blog';
 $charset = 'utf8';
 define("DB_DSN", "mysql:host=$host;dbname=$db;charset=$charset");
 define("DB_USER", 'martikco');

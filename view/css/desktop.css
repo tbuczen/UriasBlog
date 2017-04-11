@@ -7,21 +7,10 @@
         font-size: 35px;
         text-align: center;
         min-height: 100px;
-        background-color: beige;
     }
 
     /*NAV SECTION*/
-    nav{
-        height: 50px;
-    }
-    .nav-links{
-        float: left;
-    }
 
-    .changeView{
-        float: right;
-        margin-right: 10px;
-    }
 
     #searchbar{
         width: 200px;

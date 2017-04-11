@@ -57,8 +57,8 @@ class PostController extends BaseController
         $images = $this->db->fetch("media",["post_id" => $id]);
 
         $oldTitle = $post["title"];
-        $date = explode(" ",$post["date"]);
-        $date = reset($date);
+        $dateArr = explode(" ",$post["date"]);
+        $date = reset($dateArr);
 
         if(isset($_POST["submit"])) {
             $title = $_POST["title"];
